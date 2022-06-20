@@ -1023,10 +1023,10 @@ class Sync(Base):
         """Consumer which polls Redis continuously."""
         while True:
             payloads: dict = self.redis.bulk_pop()
+            logging.warning('Watch out!, polling redis')
             if payloads:
                 logger.debug(f"poll_redis: {payloads}")
                 self.count["redis"] += len(payloads)
-                logging.warning('Watch out!, refreshing view')
                 self.refresh_views()
                 self.on_publish(payloads)
             time.sleep(REDIS_POLL_INTERVAL)
@@ -1036,10 +1036,10 @@ class Sync(Base):
         """Consumer which polls Redis continuously."""
         while True:
             payloads: dict = self.redis.bulk_pop()
+            logging.warning('Watch out!, polling redis asyncronously')
             if payloads:
                 logger.debug(f"poll_redis: {payloads}")
                 self.count["redis"] += len(payloads)
-                logging.warning('Watch out!, refreshing view asyncronously')
                 await self.async_refresh_views()
                 await self.async_on_publish(payloads)
             await asyncio.sleep(REDIS_POLL_INTERVAL)
